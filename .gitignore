@@ -1,0 +1,19 @@
+# Secret API keys
+.env
+.env.*
+
+# Python virtual environment
+ChatBotEnv/
+venv/
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Editor and system files
+.vscode/
+.DS_Store
+
+documents/
+tcs_doc_index/

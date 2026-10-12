@@ -1,0 +1,561 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCS AI Chatbot</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef4ff;
+            color: #172554;
+            min-height: 100vh;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr) 250px;
+            gap: 18px;
+            max-width: 1500px;
+            min-height: 100vh;
+            margin: auto;
+            padding: 18px;
+        }
+
+        /* LEFT SIDEBAR */
+        .sidebar {
+            background: linear-gradient(160deg, #123b78, #0755a5);
+            color: white;
+            border-radius: 18px;
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .logo small {
+            display: block;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .nav {
+            padding: 13px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid #a9c5e8;
+            padding: 11px;
+            border-radius: 9px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .features {
+            border-top: 1px solid #7ba0cc;
+            margin-top: 25px;
+            padding-top: 20px;
+            line-height: 2.4;
+            font-size: 13px;
+        }
+
+        .powered {
+            margin-top: auto;
+            padding-top: 25px;
+            color: #dbeafe;
+            font-size: 12px;
+        }
+
+        /* MAIN CHAT AREA */
+        .main {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .header {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 17px;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .status {
+            color: #15803d;
+            background: #dcfce7;
+            padding: 9px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .chat-box {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 17px;
+            padding: 22px;
+            flex: 1;
+            min-height: 350px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .welcome {
+            background: #eff6ff;
+            border-radius: 14px;
+            padding: 22px;
+            line-height: 1.8;
+            color: #334155;
+        }
+
+        .welcome h2 {
+            color: #1d4ed8;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            max-width: 90%;
+            padding: 14px 16px;
+            margin: 14px 0;
+            border-radius: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .message strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        .bot-message {
+            margin-right: auto;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        #question {
+            flex: 1;
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        #question:focus {
+            border-color: #2563eb;
+        }
+
+        #send-btn {
+            background: #075bea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #send-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 11px;
+            line-height: 1.6;
+        }
+
+        /* EXAMPLE QUESTIONS */
+        .examples {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 17px;
+            padding: 17px;
+            align-self: start;
+        }
+
+        .examples h2 {
+            font-size: 18px;
+            margin-bottom: 17px;
+        }
+
+        .example-btn {
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 12px 10px;
+            margin-bottom: 10px;
+            color: #1e3a8a;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .example-btn:hover {
+            background: #e0ecff;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1050px) {
+            .app {
+                grid-template-columns: 200px minmax(0, 1fr);
+            }
+
+            .examples {
+                grid-column: 2;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .app {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            .sidebar {
+                padding: 17px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .features,
+            .powered {
+                display: none;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            .chat-box {
+                min-height: 350px;
+            }
+
+            .examples {
+                grid-column: 1;
+            }
+
+            #send-btn {
+                padding: 0 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                TCS
+                <small>AI CHATBOT</small>
+            </div>
+
+            <div class="nav">🏠 Chat</div>
+
+            <button class="clear-btn" id="clear-btn">
+                🗑️ Clear Chat
+            </button>
+
+            <div class="features">
+                <strong>✨ What I can help with</strong>
+                <p>✅ TCS PDF questions</p>
+                <p>✅ Company information</p>
+                <p>✅ Report details</p>
+                <p>✅ PDF-based answers</p>
+            </div>
+
+            <div class="powered">
+                Powered by<br>
+                Gemini AI + FAISS
+            </div>
+
+        </aside>
+
+        <!-- CHAT SECTION -->
+        <main class="main">
+
+            <header class="header">
+                <div>
+                    <h1>TCS AI Chatbot</h1>
+                    <p>Ask questions about your TCS report</p>
+                </div>
+
+                <div class="status">● Ready</div>
+            </header>
+
+            <section class="chat-box" id="chat-box">
+
+                <div class="welcome" id="welcome">
+                    <h2>Hello! 👋 Welcome</h2>
+
+                    <p>
+                        I am your TCS PDF assistant.
+                    </p>
+
+                    <p>
+                        Ask a question about the information
+                        contained in your TCS report.
+                    </p>
+
+                    <p>
+                        If the answer is not available in the
+                        document, I will let you know.
+                    </p>
+                </div>
+
+            </section>
+
+            <div class="input-area">
+
+                <form class="input-row" id="chat-form">
+
+                    <input
+                        type="text"
+                        id="question"
+                        placeholder="Ask a question about the TCS PDF..."
+                        autocomplete="off"
+                        required
+                    >
+
+                    <button type="submit" id="send-btn">
+                        ➤ Send
+                    </button>
+
+                </form>
+
+                <p class="hint">
+                    Press Enter to send your question.
+                    <br>
+                    Answers are restricted to your TCS document.
+                </p>
+
+            </div>
+
+        </main>
+
+        <!-- EXAMPLE QUESTIONS -->
+        <aside class="examples">
+
+            <h2>💡 Example Questions</h2>
+
+            <button class="example-btn">
+                What is TCS?
+            </button>
+
+            <button class="example-btn">
+                What is the revenue mentioned in the report?
+            </button>
+
+            <button class="example-btn">
+                Tell me about TCS employees.
+            </button>
+
+            <button class="example-btn">
+                What business strategies are mentioned?
+            </button>
+
+            <button class="example-btn">
+                What is the report about?
+            </button>
+
+        </aside>
+
+    </div>
+
+    <script>
+        // Find the required HTML elements
+        const form = document.getElementById("chat-form");
+        const input = document.getElementById("question");
+        const chatBox = document.getElementById("chat-box");
+        const sendBtn = document.getElementById("send-btn");
+        const clearBtn = document.getElementById("clear-btn");
+
+        // Remove the welcome message when chatting starts
+        function removeWelcome() {
+            const welcome = document.getElementById("welcome");
+
+            if (welcome) {
+                welcome.remove();
+            }
+        }
+
+        // Add a message to the chat window
+        function addMessage(sender, text, className) {
+            const message = document.createElement("div");
+            message.className = "message " + className;
+
+            const label = document.createElement("strong");
+            label.textContent = sender + ":";
+
+            const content = document.createElement("div");
+            content.textContent = text;
+
+            message.appendChild(label);
+            message.appendChild(content);
+
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Send question to the Flask backend
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const question = input.value.trim();
+
+            if (!question) {
+                return;
+            }
+
+            removeWelcome();
+
+            // Show the user's question
+            addMessage("You", question, "user-message");
+
+            input.value = "";
+            sendBtn.disabled = true;
+            sendBtn.textContent = "Thinking...";
+
+            try {
+                const response = await fetch("/tcs", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        tcs_question: question
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.response || "Request failed."
+                    );
+                }
+
+                // Show the actual response from Flask/Gemini
+                addMessage(
+                    "TCS AI",
+                    data.response || "No answer received.",
+                    "bot-message"
+                );
+
+            } catch (error) {
+                addMessage(
+                    "TCS AI",
+                    "Unable to get an answer. Please check the server and try again.",
+                    "bot-message"
+                );
+
+                console.error("Chatbot error:", error);
+
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = "➤ Send";
+                input.focus();
+            }
+        });
+
+        // Put an example question into the input box
+        document.querySelectorAll(".example-btn").forEach(function(button) {
+            button.addEventListener("click", function() {
+                input.value = button.textContent.trim();
+                input.focus();
+            });
+        });
+
+        // Clear all chat messages
+        clearBtn.addEventListener("click", function() {
+            chatBox.replaceChildren();
+
+            const welcome = document.createElement("div");
+            welcome.className = "welcome";
+            welcome.id = "welcome";
+
+            const heading = document.createElement("h2");
+            heading.textContent = "Hello! 👋 Welcome";
+
+            const paragraph = document.createElement("p");
+            paragraph.textContent =
+                "Ask a question about your TCS report.";
+
+            welcome.appendChild(heading);
+            welcome.appendChild(paragraph);
+
+            chatBox.appendChild(welcome);
+            input.focus();
+        });
+    </script>
+
+</body>
+</html>
