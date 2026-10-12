@@ -1,32 +1,29 @@
-# TCS-Chatbot-RAG
-A PDF-based TCS Chatbot using Retrieval-Augmented Generation (RAG), FAISS vector search, Hugging Face embeddings, Gemini API, and Flask to answer questions strictly from the TCS document.
-# TCS Chatbot using RAG
+# TCS Document Chatbot Using RAG
 
-A PDF-based chatbot that answers user questions using information retrieved from a TCS document.
+A document-based AI chatbot that answers user questions using information retrieved from a TCS PDF document.
 
 ## Project Overview
 
-This project uses Retrieval-Augmented Generation (RAG) to retrieve relevant content from a PDF and generate answers based only on the available document context. If the answer is not present in the document, the chatbot returns a predefined fallback message.
-
-## Features
-
-- PDF-based question answering
-- Semantic search using FAISS
-- Text embeddings using Hugging Face Sentence Transformers
-- Gemini API for answer generation
-- Flask backend with an HTML chat interface
-- Document-grounded answers with a fallback for missing information
+This project uses Retrieval-Augmented Generation (RAG) to retrieve relevant information from a PDF and generate answers based on the retrieved context. If the required information is not available in the document, the chatbot returns a predefined fallback message.
 
 ## Technologies Used
 
 - Python
 - Flask
 - LangChain
-- FAISS
+- FAISS Vector Database
 - Hugging Face Sentence Transformers
 - Google Gemini API
 - HTML, CSS, JavaScript
 - PyPDF
+
+## Key Features
+
+- Ask questions about the configured TCS PDF.
+- Retrieve relevant document chunks using FAISS similarity search.
+- Generate context-based answers using Gemini.
+- Avoid answering questions unsupported by the document.
+- Provide a fallback message when the answer cannot be found.
 
 ## Project Structure
 
@@ -34,79 +31,74 @@ This project uses Retrieval-Augmented Generation (RAG) to retrieve relevant cont
 TCS-Chatbot-RAG/
 ├── app.py
 ├── batchjob.py
-├── templates/
-│   └── index.html
-├── documents/       # Local PDF files; not committed
-├── tcs_doc_index/   # Local FAISS index; not committed
-├── .env             # API key; not committed
+├── requirements.txt
 ├── .gitignore
-└── README.md
+├── README.md
+├── documents/
+├── tcs_doc_index/
+└── templates/
+    └── index.html
 ```
 
-## Setup Instructions
+## Installation and Setup
 
-### 1. Clone the repository
+1. Clone this repository:
 
-```bash
-git clone https://github.com/Arya-gunji/TCS-Chatbot-RAG.git
-cd TCS-Chatbot-RAG
-```
+   ```bash
+   git clone https://github.com/Arya-gunji/TCS-Chatbot-RAG.git
+   cd TCS-Chatbot-RAG
+   ```
 
-### 2. Create and activate a virtual environment
+2. Create and activate a virtual environment:
 
-```bash
-python -m venv ChatBotEnv
-```
+   ```bash
+   python -m venv venv
+   ```
 
-Windows PowerShell:
+   Windows PowerShell:
 
-```powershell
-.\ChatBotEnv\Scripts\Activate.ps1
-```
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
 
-### 3. Install dependencies
+3. Install dependencies:
 
-Install the required packages used by the project, such as Flask, LangChain Community, LangChain Hugging Face, FAISS CPU, PyPDF, Sentence Transformers, Google GenAI, and python-dotenv.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 4. Configure the API key
+4. Create a `.env` file in the project root and add your Gemini API key:
 
-Create a `.env` file in the project root:
+   ```text
+   GEMINI_API_KEY=your_api_key_here
+   ```
 
-```text
-GEMINI_API_KEY=your_api_key_here
-```
+   Never upload your real API key to GitHub.
 
-Replace the placeholder with your own API key. Never commit your actual API key to GitHub.
+5. Ensure the required PDF document is available locally and generate the FAISS index using the project's indexing script:
 
-### 5. Prepare the PDF and FAISS index
+   ```bash
+   python batchjob.py
+   ```
 
-Place an authorized PDF in the `documents/` folder and run:
+6. Start the Flask application:
 
-```bash
-python batchjob.py
-```
+   ```bash
+   python app.py
+   ```
 
-This prepares the vector index used by the chatbot. The PDF and generated index are stored locally.
+7. Open the local URL displayed in the terminal, usually `http://127.0.0.1:5000`.
 
-### 6. Start the application
+## Security and Data
 
-```bash
-python app.py
-```
+The API key, private documents, and other sensitive files should not be committed to the repository. Access to the source PDF must comply with its applicable permissions.
 
-Open the local URL displayed in the terminal, usually `http://127.0.0.1:5000`.
+## Future Improvements
 
-## Expected Behavior
-
-- Answers questions using relevant content from the configured PDF.
-- Avoids answering from general knowledge.
-- Returns `I could not find the answer in the TCS document.` when the document does not contain sufficient information.
-
-## Security
-
-- Keep `.env` and API keys private.
-- Do not upload confidential or copyrighted documents without permission.
-- Keep local virtual environments and generated index files out of version control.
+- Improve document retrieval accuracy.
+- Add source references to answers.
+- Improve error handling and response time.
+- Deploy the application to a suitable hosting platform.
 
 ## Author
 
